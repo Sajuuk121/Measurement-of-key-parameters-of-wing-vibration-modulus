@@ -1,6 +1,8 @@
 # Measurement-of-key-parameters-of-wing-vibration-modulus
 The project goal is to use binocular vision and non-contact measurement methods to identify modal parameters of large antennas, solar wings, etc. in orbit. 
 The rar compressed file contains two folders. One folder has a chessboard for camera calibration, and the other folder has feature points, split into left and right images, for measurement purposes.
+
+# # 深空无人器翼展振动模量关键参数测量技术
 rar的压缩文件包中包含了两个文件夹，一个文件夹中是棋盘，用来进行相机标定；另外一个文件夹是特征点，分为左右图像，进行测量用的。
 课程训练项目要求（清晰写出本课程训练要做的内容和目标）
 本项目目标：利用双目视觉非接触式测量手段实现大型天线、太阳翼等模态参数在轨辨识方法，具体在天线或太阳翼表面布设合作目标回光反射标志点作为测点，通过标志点提取技术及三角测量原理实现合作标记点处的振动位移信息计算。
@@ -9,8 +11,8 @@ rar的压缩文件包中包含了两个文件夹，一个文件夹中是棋盘�
 
 
 
-研究报告内容
-一．	对黑白棋盘格格子进行标定，从而实现对双目摄像机的标定
+# 研究报告内容
+# # 一．对黑白棋盘格格子进行标定，从而实现对双目摄像机的标定
 1、	原理
 通过对两幅图像视差的计算，直接对前方景物（图像所拍摄到的范围）进行距离测量，而无需判断前方出现的是什么类型的障碍物。所以对于任何类型的障碍物，都能根据距离信息的变化，进行必要的预警或制动。双目摄像头的原理与人眼相似。人眼能够感知物体的远近，是由于两只眼睛对同一个物体呈现的图像存在差异，也称“视差”。物体距离越远，视差越小；反之，视差越大。视差的大小对应着物体与眼睛之间距离的远近，这也是3D电影能够使人有立体层次感知的原因。
  
@@ -19,20 +21,28 @@ rar的压缩文件包中包含了两个文件夹，一个文件夹中是棋盘�
 第1步：准备一张棋盘格，粘贴于墙面，并用直尺测量黑白方格的真实物理长度。
 第2步：调用双目摄像头，分别从不同角度拍摄得到一系列棋盘格图像。
         前两步采用已有图像解决
+
 第3步：采用工具箱TOOLBOX_calib，利用左目图片数据集，进行左目相机标定，得到左目内参矩阵K1、左目畸变系数向量D1，并点击save，得到mat文件。 
 
 
 第4步：同上，利用右目图片数据集，进行右目相机标定，得到右目内参矩阵K2、右目畸变系数向量D2，
+
 第5步：命令行输入stereo_gui，导入之前得到的文件夹，实现双目标定，点击show extrinsi可以显示照片与摄像头的关系图，以及双目摄像头之间的距离
  
 
 
 下载工具箱并解压到toolbox文件夹，并在matlab中添加功能工具箱路径，在MATLAB命令行窗口输入calib_gui，弹出工具框，点击第一个选项输入图片前缀（right_或left_）和图片格式（本次采用jpg格式），之后选择第一行第三个选项并依次标定即可。
+
 值得注意的是标定过程必须一次标定正确，如果有错误只能重新开始，所以需要比较谨慎。
 
+
 3、用到的算法和代码
+``` matlab
+
 Calib_gui
 Stereo_gui
+
+``` 
 
 4、结论、总结和拓展
 在我们进行实验的时候发现一些缺陷和问题。
@@ -45,7 +55,7 @@ Stereo_gui
 Matlab 的机器视觉工具箱能够很好地对单个相机进行标定，得到了近乎完美的结果，比标定工具箱好上不少，且实现了全自动化操作。
 但是当我们期望利用两个相机分别的标定结果进行双目相机标定时出现了问题。具体来说，我们本来想的是利用机器视觉工具箱app的结果来进行双目标定，但是发现两个result的格式完全不一样无法使用。我们转而使用了matlab的双目标定app，但是这次出现了报错且无法解决。仔细分析后是发现我们本次标定的棋盘是23x23的正方形，而matlab的机器视觉app不能进行正方形棋盘的标定，因为有四个顶点都能成为原点o，于是产生了数组大小不一的错误，无法继续下去。所以我们最终结合了二者取其精华。
 
-二、进行编码特征点提取并且利用双目相机标定的结果来计算三维空间真实坐标
+# # 二、进行编码特征点提取并且利用双目相机标定的结果来计算三维空间真实坐标
 1、特征点提取
 1）特征点提取：利用imfindcircles函数，发现采用圆形Hough变换圆。
 三维坐标测量：根据相机的标定结果对校正后的图像进行像素点匹配，之后根据匹配结果计算每个像素的深度，从而得到具体的三维坐标。
@@ -58,6 +68,7 @@ Matlab 的机器视觉工具箱能够很好地对单个相机进行标定，得�
  第四步：进行三维空间真实坐标的计算。
 
 3）、用到的算法和代码
+```
 clear
 zuobiao=zeros(126,2);
 %%×ó±ßÏà»ú
@@ -108,8 +119,6 @@ name=strcat('left_',num2str(m2),'.jpg');
 A=imread(name);
  
  
- 
- 
 MyYuanLaiPic = imread(name);%¶ÁÈ¡RGB¸ñÊ½µÄÍ¼Ïñ  
 MyFirstGrayPic = rgb2gray(MyYuanLaiPic);%ÓÃÒÑÓÐµÄº¯Êý½øÐÐRGBµ½»Ò¶ÈÍ¼ÏñµÄ×ª»»
 [rows , cols , colors] = size(MyYuanLaiPic);%µÃµ½Ô­À´Í¼ÏñµÄ¾ØÕóµÄ²ÎÊý  
@@ -142,10 +151,10 @@ disp(m2)
 outname=strcat('out-left_',num2str(m2),'.jpg')
 print(outname,'-dpng')
 end
+```
 
 
-
-opencv部分：
+```opencv部分：
 Mat jiaozheng( Mat image )
 {
     Size image_size = image.size();
@@ -327,7 +336,7 @@ Point2f xyz2uv(Point3f worldPoint,float intrinsic[3][3],float translation[1][3],
  
 	return uv;
 }
-
+```
 
 
 2、	计算对应特征点的三维坐标
@@ -342,6 +351,7 @@ fc_right, cc_right,…:右侧相机的固有参数(立体标定输出)
 XL:左侧相机参考系中点坐标的3xN矩阵 
 XR:右相机参考系中点坐标的3xN矩阵
 在第一问中通过stereo_gui工具箱，我们可以得出相机的内参矩阵，将得到的内参矩阵带入函数，同时将提取的左右特征点坐标分别用矩阵xL和矩阵xR表示，代码如下：
+```
 clc;
 clear;
 xL = readtable ('xL.txt');
@@ -433,6 +443,7 @@ XL = 1/2 * (X1 + X2);
 
 %--- Right coordinates:
 XR = R*XL + T_vect;
+```
 以上就是代码部分的内容，最终得到输出
 XL:左侧相机参考系中点坐标的3xN矩阵；
 XR:右相机参考系中点坐标的3xN矩阵；
